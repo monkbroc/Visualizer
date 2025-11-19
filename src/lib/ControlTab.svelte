@@ -16,6 +16,33 @@
   export let x: d3.ScaleLinear<number, number, number>;
   export let y: d3.ScaleLinear<number, number, number>;
   export let settings: FPASettings;
+  function updateY(object, e, key = 'y') {
+    const y = +e.target.value;
+    object[key] = y + 72;
+  }
+
+  function updateX(object, e, key = 'x') {
+    const x = +e.target.value;
+    object[key] = 72 - x;
+  }
+
+  function updateAngle(object, key, e) {
+    const h = +e.target.value;
+    object[key] = h + 90;
+  }
+
+  function applyOffsetY(y) {
+    return y - 72;
+  }
+  function applyOffsetX(x) {
+    return 72 - x;
+  }
+  function applyOffsetAngle(h) {
+    return h - 90;
+  }
+  function applyRobotOffsetAngle(h) {
+    return h + 90;
+  }
 </script>
 
 <div class="flex-1 flex flex-col justify-start items-center gap-2 h-full">
@@ -56,14 +83,14 @@
       <div class="font-semibold">Current Robot Position</div>
       <div class="flex flex-row justify-start items-center gap-2">
         <div class="font-extralight">X:</div>
-        <div class="w-16">{x.invert(robotXY.x).toFixed(3)}</div>
+        <div class="w-16">{applyOffsetY(y.invert(robotXY.y)).toFixed(3)}</div>
         <div class="font-extralight">Y:</div>
-        <div class="w-16">{y.invert(robotXY.y).toFixed(3)}</div>
+        <div class="w-16">{applyOffsetX(x.invert(robotXY.x)).toFixed(3)}</div>
         <div class="font-extralight">Heading:</div>
         <div>
-          {robotHeading.toFixed(0) === "-0"
+          {applyRobotOffsetAngle(robotHeading).toFixed(0) === "-0"
             ? "0"
-            : -robotHeading.toFixed(0)}&deg;
+            : -applyRobotOffsetAngle(robotHeading).toFixed(0)}&deg;
         </div>
       </div>
     </div>
@@ -73,7 +100,8 @@
       <div class="flex flex-row justify-start items-center gap-2">
         <div class="font-extralight">X:</div>
         <input
-          bind:value={startPoint.x}
+          value={applyOffsetY(startPoint.y)}
+          on:input={(e) => updateY(startPoint, e)}
           min="0"
           max="144"
           type="number"
@@ -82,7 +110,8 @@
         />
         <div class="font-extralight">Y:</div>
         <input
-          bind:value={startPoint.y}
+          value={applyOffsetX(startPoint.x)}
+          on:input={(e) => updateX(startPoint, e)}
           min="0"
           max="144"
           type="number"
@@ -172,7 +201,8 @@
               type="number"
               min="0"
               max="144"
-              bind:value={line.endPoint.x}
+              value={applyOffsetY(line.endPoint.y)}
+              on:input={(e) => updateY(line.endPoint, e)}
             />
             <div class="font-extralight">Y:</div>
             <input
@@ -181,7 +211,8 @@
               min="0"
               max="144"
               type="number"
-              bind:value={line.endPoint.y}
+              value={applyOffsetX(line.endPoint.x)}
+              on:input={(e) => updateX(line.endPoint, e)}
             />
 
             <select
@@ -206,7 +237,8 @@ With facing point heading, the robot points to a specified coordinate."
                 type="number"
                 min="-180"
                 max="180"
-                bind:value={line.endPoint.startDeg}
+                value={applyOffsetAngle(line.endPoint.startDeg)}
+                on:input={(e) => updateAngle(line.endPoint, 'startDeg', e)}
                 title="The heading the robot starts this line at (in degrees)"
               />
               <input
@@ -215,7 +247,8 @@ With facing point heading, the robot points to a specified coordinate."
                 type="number"
                 min="-180"
                 max="180"
-                bind:value={line.endPoint.endDeg}
+                value={applyOffsetAngle(line.endPoint.endDeg)}
+                on:input={(e) => updateAngle(line.endPoint, 'endDeg', e)}
                 title="The heading the robot ends this line at (in degrees)"
               />
             {:else if line.endPoint.heading === "constant"}
@@ -225,7 +258,8 @@ With facing point heading, the robot points to a specified coordinate."
                 type="number"
                 min="-180"
                 max="180"
-                bind:value={line.endPoint.degrees}
+                value={applyOffsetAngle(line.endPoint.degrees)}
+                on:input={(e) => updateAngle(line.endPoint, 'degrees', e)}
                 title="The constant heading the robot maintains throughout this line (in degrees)"
               />
             {:else if line.endPoint.heading === "tangential"}
@@ -239,7 +273,9 @@ With facing point heading, the robot points to a specified coordinate."
                   type="number"
                   min="0"
                   max="144"
-                  bind:value={line.endPoint.facingPointX}
+                  value={applyOffsetY(line.endPoint.facingPointY)}
+                  on:input={(e) => updateY(line.endPoint, e, 'facingPointY')}
+
                   title="The X coordinate (in inches) the robot should face while following this line"
                 />
                 <input
@@ -248,7 +284,8 @@ With facing point heading, the robot points to a specified coordinate."
                   type="number"
                   min="0"
                   max="144"
-                  bind:value={line.endPoint.facingPointY}
+                  value={applyOffsetX(line.endPoint.facingPointX)}
+                  on:input={(e) => updateX(line.endPoint, e, 'facingPointX')}
                   title="The Y coordinate (in inches) the robot should face while following this line"
                 />
               </div>
