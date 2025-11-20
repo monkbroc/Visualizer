@@ -25,7 +25,7 @@
   let pointRadius = 1.15;
   let lineWidth = 0.57;
   let robotWidth = 16;
-  let robotHeight = 16;
+  let robotHeight = 18;
   let settings: FPASettings = {
     xVelocity: 60,
     yVelocity: 60,
@@ -66,7 +66,7 @@
 
   let startPoint: Point = {
     x: 56,
-    y: 8,
+    y: 12,
     heading: "linear",
     startDeg: 90,
     endDeg: 180

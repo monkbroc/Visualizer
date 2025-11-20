@@ -70,6 +70,16 @@
       facing_point: "setHeadingInterpolation",
     };
 
+    function applyOffsetY(y) {
+      return y - 72;
+    }
+    function applyOffsetX(x) {
+      return 72 - x;
+    }
+    function applyOffsetAngle(h) {
+      return h - 90;
+    }
+
     let pathsClass = `
     public static class Paths {
       ${lines.map((line, idx) => {
@@ -85,30 +95,30 @@
           ${line.controlPoints.length === 0 ? `new BezierLine` : `new BezierCurve`}(
             ${
                                       idx === 0
-                                              ? `new Pose(${startPoint.x.toFixed(3)}, ${startPoint.y.toFixed(3)}),`
-                                              : `new Pose(${lines[idx - 1].endPoint.x.toFixed(3)}, ${lines[idx - 1].endPoint.y.toFixed(3)}),`
+                                              ? `new Pose(${applyOffsetY(startPoint.y).toFixed(3)}, ${applyOffsetX(startPoint.x).toFixed(3)}),`
+                                              : `new Pose(${applyOffsetY(lines[idx - 1].endPoint.y).toFixed(3)}, ${applyOffsetX(lines[idx - 1].endPoint.x).toFixed(3)}),`
                               }
             ${
                                       line.controlPoints.length > 0
                                               ? `${line.controlPoints
                                                       .map(
                                                               (point) =>
-                                                                      `new Pose(${point.x.toFixed(3)}, ${point.y.toFixed(3)})`
+                                                                      `new Pose(${applyOffsetY(point.y).toFixed(3)}, ${applyOffsetX(point.x).toFixed(3)})`
                                                       )
                                                       .join(",\n")},`
                                               : ""
                               }
-            new Pose(${line.endPoint.x.toFixed(3)}, ${line.endPoint.y.toFixed(3)})
+            new Pose(${applyOffsetY(line.endPoint.y).toFixed(3)}, ${applyOffsetX(line.endPoint.x).toFixed(3)})
           )
         ).${headingTypeToFunctionName[line.endPoint.heading]}(${(() => {
           if (line.endPoint.heading === "constant") {
-            return `Math.toRadians(${line.endPoint.degrees})`;
+            return `Math.toRadians(${applyOffsetAngle(line.endPoint.degrees)})`;
           } else if (line.endPoint.heading === "linear") {
-            return `Math.toRadians(${line.endPoint.startDeg}), Math.toRadians(${line.endPoint.endDeg})`;
+            return `Math.toRadians(${applyOffsetAngle(line.endPoint.startDeg)}), Math.toRadians(${applyOffsetAngle(line.endPoint.endDeg)})`;
           } else if (line.endPoint.heading === "facing_point") {
             const faceX = line.endPoint.facingPointX ?? line.endPoint.x;
             const faceY = line.endPoint.facingPointY ?? line.endPoint.y;
-            return `HeadingInterpolator.facingPoint(${faceX.toFixed(3)}, ${faceY.toFixed(3)})`;
+            return `HeadingInterpolator.facingPoint(${applyOffsetY(faceY.toFixed(3))}, ${applyOffsetX(faceX.toFixed(3))})`;
           }
           return "";
         })()})
