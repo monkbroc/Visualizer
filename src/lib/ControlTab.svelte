@@ -331,18 +331,20 @@ With facing point heading, the robot points to a specified coordinate."
                 class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-28"
                 step="0.1"
                 type="number"
-                bind:value={point.x}
                 min="0"
                 max="144"
+                value={applyOffsetY(point.y)}
+                on:input={(e) => updateY(point, e)}
               />
               <div class="font-extralight">Y:</div>
               <input
                 class="pl-1.5 rounded-md bg-neutral-100 dark:bg-neutral-950 dark:border-neutral-700 border-[0.5px] focus:outline-none w-28"
                 step="0.1"
                 type="number"
-                bind:value={point.y}
                 min="0"
                 max="144"
+                value={applyOffsetX(point.x)}
+                on:input={(e) => updateX(point, e)}
               />
               <button
                 title="Remove Control Point"
