@@ -227,7 +227,7 @@
   class="absolute top-0 left-0 w-full bg-neutral-50 dark:bg-neutral-900 shadow-md flex flex-row justify-between items-center px-6 py-4 border-b-[0.75px] border-[#b300e6]"
 >
   <div class="font-semibold flex flex-col justify-start items-start">
-    <div>Pedro Pathing Visualizer</div>
+    <div>Pedro Pathing Visualizer (Field Center Coordinates)</div>
   </div>
   <div class="flex flex-row justify-end items-center gap-4">
     <div class="flex items-center gap-3">
