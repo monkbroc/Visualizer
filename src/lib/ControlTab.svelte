@@ -16,6 +16,16 @@
   export let x: d3.ScaleLinear<number, number, number>;
   export let y: d3.ScaleLinear<number, number, number>;
   export let settings: FPASettings;
+  function normalizeAngle(h) {
+    if (h > 180) {
+      return h - 360;
+    } else if (h <= -180) {
+      return h + 360;
+    } else {
+      return h;
+    }
+  }
+
   function updateY(object, e, key = 'y') {
     const y = +e.target.value;
     object[key] = y + 72;
@@ -28,7 +38,7 @@
 
   function updateAngle(object, key, e) {
     const h = +e.target.value;
-    object[key] = h + 90;
+    object[key] = normalizeAngle(h + 90);
   }
 
   function applyOffsetY(y) {
@@ -38,10 +48,10 @@
     return 72 - x;
   }
   function applyOffsetAngle(h) {
-    return h - 90;
+    return normalizeAngle(h - 90);
   }
   function applyRobotOffsetAngle(h) {
-    return h + 90;
+    return normalizeAngle(h + 90);
   }
 </script>
 

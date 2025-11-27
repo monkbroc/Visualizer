@@ -77,7 +77,14 @@
       return 72 - x;
     }
     function applyOffsetAngle(h) {
-      return h - 90;
+      h = h - 90;
+      if (h > 180) {
+        return h - 360;
+      } else if (h <= -180) {
+        return h + 360;
+      } else {
+        return h;
+      }
     }
 
     let pathsClass = `
